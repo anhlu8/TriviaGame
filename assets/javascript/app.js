@@ -18,7 +18,7 @@ var questions_answers = [
     }
     
 ];
-var timer = 5;
+var timer = 10;
 var intervalID;
 
 var generateQuestionSet = function(){
@@ -28,7 +28,7 @@ generateQuestionSet();
 
 var timeOut = setTimeout (function(){
     $("#correctAnswer").html("Correct answer: " + questionSet.correctAnswer);
-}, 5000);
+}, 10000);
 
 var decrement = function(){
     timer--;
