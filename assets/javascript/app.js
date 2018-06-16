@@ -20,32 +20,33 @@ var questions_answers = [
 ];
 var timer = 10;
 var intervalID;
-
+var answerButtons;
+var questionNum = 0;
+var userChoice;
 var generateQuestionSet = function(){
-    rand = Math.floor(Math.random() * questions_answers.length);
-    questionSet = questions_answers[rand];
+    questionSet = questions_answers[questionNum];
 };
 generateQuestionSet();
-
-// var timeOut = setTimeout (function(){
-//     $("#correctAnswer").html("Correct answer: " + questionSet.correctAnswer);
-// }, 10000);
 
 var decrement = function(){
     timer--;
     $("#timer").html(timer);
     if (timer === 0) {
-        $("#correctAnswer").html("Correct answer: " + questionSet.correctAnswer);
-        stop();
+        stop(); 
+        $(".hide").hide();
+        $(".resultsPage").show(); 
+        var finalAnswer = $("<p>").text("You didn't pick an answer. But here it is! " + questionSet.correctAnswer);
+        $("#answer").append(finalAnswer); 
     }
 };
 function stop (){
     clearInterval(intervalID);
+    questionNum++;
 };
 
 var run = function(){
     intervalID = setInterval(decrement, 1000);
-    };
+};
 
 document.getElementById("startButton").addEventListener('click',function(){
     $(".hide").show();
@@ -53,12 +54,37 @@ document.getElementById("startButton").addEventListener('click',function(){
     run();
     document.getElementById("question").innerHTML = questionSet.question;
     questionSet.answers.forEach(function(answer) {
-    $("#choices").append("<button>" + answer + "</button>");
+    answerButtons = $("#choices").append("<button class=choice data-correct=" + answer + ">" + answer + "</button>");
+    });   
 });
+
+function results (userChoice) {
+    $(".hide").hide();
+    $(".resultsPage").show();
+    if (questionSet.correctAnswer === userChoice){
+    var correctP = $("<p>").text("You're correct!");
+    $("#answer").append(correctP);
+    } else {
+    var incorrectP = $("<p>").text("It's not the correct answer. The correct answer is " + questionSet.correctAnswer);  
+    $("#answer").append(incorrectP);
+    }
     
-});
+}
+ 
+$(document).on('click', '.choice', function(){
+    userChoice = $(this).attr("data-correct");
+    results(userChoice);
+    stop();
+})
 
-
-
+// setTimeout(function newSetofQuestions(){
+// generateQuestionSet();
+// $(".hide").show();
+// $(".resultsPage").hide();
+// document.getElementById("question").innerHTML = questionSet.question;
+//     questionSet.answers.forEach(function(answer) {
+//     answerButtons = $("#choices").append("<button class=choice data-correct=" + answer + ">" + answer + "</button>");
+//     });
+// }, 3000);
 
 });
